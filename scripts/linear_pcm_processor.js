@@ -21,6 +21,8 @@ class LinearPCMProcessor extends AudioWorkletProcessor {
                 let val = Math.floor(32767 * input[i]);
                 val = Math.min(32767, val);
                 val = Math.max(-32768, val);
+
+                buffer.push(val);
             }
     
             this.port.postMessage(buffer);
