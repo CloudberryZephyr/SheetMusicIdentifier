@@ -7,7 +7,7 @@ define(function(require) {
     function getAudioData(recorder) {
         return new Promise( function(resolve, reject) {
             setTimeout( function() {
-                recorder.stop();
+                recorder.disconnect();
 
                 resolve(chunks);
             }, 5000)
@@ -57,7 +57,7 @@ define(function(require) {
             console.log("getUserMedia not supported on this browser");
         }
 
-        recorder.start();
+        recorder.connect(audioContext.destination);
 
         getAudioData(recorder).then( function(audioChunks) {
             console.log('done');
