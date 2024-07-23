@@ -44,11 +44,8 @@ define(function(require) {
 					volume.connect(recorder);
 
                     recorder.port.onmessage = (e) => {
-						console.log(e.data);
-                        
-                        //const samples = new Float32Array(e.data);
-						// chunks.push(samples); 
-						// recordingLength += samples.length;
+                        const samples = new Float32Array(e.data);
+						chunks.push(samples); 
 					}
 
                 }) 
@@ -60,7 +57,7 @@ define(function(require) {
         recorder.connect(audioContext.destination);
 
         getAudioData(recorder).then( function(audioChunks) {
-            console.log('done');
+            console.log(audioChunks);
 
 
         });
