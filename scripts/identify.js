@@ -37,7 +37,7 @@ define(function(require) {
 					audioInput.connect(volume);
 
 					// get processor module
-					await audioContext.audioWorklet.addModule("./linear_pcm_processor.js");
+					await audioContext.audioWorklet.addModule("./scripts/linear_pcm_processor.js");
 					recorder = new AudioWorkletNode(audioContext, "linear_pcm_processor");
 
 					// we connect the recorder
