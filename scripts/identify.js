@@ -3,7 +3,6 @@ let chunks;
 
 define(function(require) {
     let lamejs = require("lame.all");
-    let 
 
     function getAudioData(recorder) {
         return new Promise( function(resolve, reject) {
