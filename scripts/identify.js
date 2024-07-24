@@ -65,6 +65,32 @@ define(function(require) {
         recorder.connect(audioContext.destination);
 
         getAudioData(recorder, chunks).then( function(audioChunks) {
+
+            // adapted from lamejs api example:
+
+            let mp3encoder = new lamejs.Mp3Encoder(1, 44100, 128);
+
+            let samples = audioChunks; //one second of silence (get your data from the source you have)
+            let sampleBlockSize = 1152; //can be anything but make it a multiple of 576 to make encoders life easier
+
+            let mp3Data = [];
+            for (var i = 0; i < samples.length; i += sampleBlockSize) {
+                let sampleChunk = samples.subarray(i, i + sampleBlockSize);
+                let mp3buf = mp3encoder.encodeBuffer(sampleChunk);
+                if (mp3buf.length > 0) {
+                    mp3Data.push(mp3buf);
+                }
+            }
+
+            let mp3buf = mp3encoder.flush();   //finish writing mp3
+
+            if (mp3buf.length > 0) {
+                mp3Data.push(new Int8Array(mp3buf));
+            }
+
+            let blob = new Blob(mp3Data, {type: 'audio/mp3'});
+            let url = window.URL.createObjectURL(blob);
+            console.log('MP3 URl: ', url);
             
 
 
