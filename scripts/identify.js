@@ -1,15 +1,26 @@
 let chunks;
-//let recorder;
+let recordingLength;
 
 define(function(require) {
     let lamejs = require("lame.all");
+
+    function mergeArrays(channelArrs) {
+        let channel = new Int16Array(recordingLength);
+
+        for (let i = 0; i < channelArrs.length; i++) {
+            channel.push(...(channelArrs[i]));
+        }
+
+        return channel;
+    }
 
     function getAudioData(recorder) {
         return new Promise( function(resolve, reject) {
             setTimeout( function() {
                 recorder.disconnect();
 
-                resolve(chunks);
+                let mergedAudio = mergeArrays(chunks);
+                resolve(mergedAudio);
             }, 5000)
         });
     }
@@ -17,6 +28,7 @@ define(function(require) {
     async function getResponse() {
         let recorder;
         chunks = [];
+        recordingLength = 0;
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {  
             await navigator.mediaDevices.getUserMedia({audio : true})
@@ -46,6 +58,7 @@ define(function(require) {
                     recorder.port.onmessage = (e) => {
                         const samples = new Int16Array(e.data);
 						chunks.push(samples); 
+                        recordingLength += samples.length;
 					}
 
                 }) 
@@ -57,7 +70,7 @@ define(function(require) {
         recorder.connect(audioContext.destination);
 
         getAudioData(recorder).then( function(audioChunks) {
-            console.log(audioChunks);
+            
 
 
         });
