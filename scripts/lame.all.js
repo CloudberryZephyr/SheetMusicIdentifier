@@ -15517,5 +15517,5 @@ lamejs.WavHeader = WavHeader;
 //fs=require('fs');
 
 define(function(require) {
-    return lamejs(); 
+    return lamejs; 
 });
