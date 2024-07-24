@@ -1,17 +1,16 @@
 let chunks;
-let recordingLength;
 
 define(function(require) {
     let lamejs = require("lame.all");
 
     function mergeArrays(channelArrs) {
-        let channel = new Int16Array(recordingLength);
+        let channel = [];
 
         for (let i = 0; i < channelArrs.length; i++) {
             channel.push(...(channelArrs[i]));
         }
 
-        return channel;
+        return new Int16Array(channel);
     }
 
     function getAudioData(recorder) {
@@ -58,7 +57,6 @@ define(function(require) {
                     recorder.port.onmessage = (e) => {
                         const samples = new Int16Array(e.data);
 						chunks.push(samples); 
-                        recordingLength += samples.length;
 					}
 
                 }) 
@@ -70,7 +68,7 @@ define(function(require) {
         recorder.connect(audioContext.destination);
 
         getAudioData(recorder).then( function(audioChunks) {
-            
+            console.log(audioChunks);
 
 
         });
