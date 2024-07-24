@@ -95,7 +95,7 @@ define(function(require) {
 
 
             // put mp3 url into form for posting
-            document.forms["audio-form"]["mp3"].value = bloburl;
+            document.forms["audio-form"]["mp3"].value = blob;
             
 
             // Music Identify api call
