@@ -102,7 +102,6 @@ define(function(require) {
                     'x-rapidapi-key': '0bfb0321bbmsh8e25be16e31863dp15994cjsnc481a9a41b94',
                     'x-rapidapi-host': 'shazam-song-recognition-api.p.rapidapi.com'
                 }
-                
             };
 
             try {
@@ -112,7 +111,7 @@ define(function(require) {
             } catch (error) {
                 console.error(error);
             }
-
+        });
     }
 
     return function buttonSensor() {
