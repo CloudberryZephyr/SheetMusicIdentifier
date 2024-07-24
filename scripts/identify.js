@@ -95,17 +95,14 @@ define(function(require) {
 
             // Music Identify api call
 
-            const url = 'https://music-identify.p.rapidapi.com/identify';
-            const data = new FormData();
-            data.append('clip', blob);
-
+            const url = 'https://shazam-song-recognition-api.p.rapidapi.com/recognize/url?url='+bloburl;
             const options = {
-                method: 'POST',
+                method: 'GET',
                 headers: {
                     'x-rapidapi-key': '0bfb0321bbmsh8e25be16e31863dp15994cjsnc481a9a41b94',
-                    'x-rapidapi-host': 'music-identify.p.rapidapi.com'
-                },
-                body: data
+                    'x-rapidapi-host': 'shazam-song-recognition-api.p.rapidapi.com'
+                }
+                
             };
 
             try {
@@ -115,7 +112,6 @@ define(function(require) {
             } catch (error) {
                 console.error(error);
             }
-        });
 
     }
 
