@@ -93,19 +93,16 @@ define(function(require) {
             let bloburl = window.URL.createObjectURL(blob);
             console.log('MP3 URl: ', bloburl);
 
-            // format url for posting
-            bloburl.replace(new RegExp(":", 'g'), "%3A");
-            bloburl.replace(new RegExp("/",'g'), "%2F");
+            const url = 'https://music-identify.p.rapidapi.com/identify';
+            const data = new FormData();
 
-            // Music Identify api call
-
-            const url = 'https://shazam-song-recognition-api.p.rapidapi.com/recognize/url?url='+bloburl;
             const options = {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'x-rapidapi-key': '0bfb0321bbmsh8e25be16e31863dp15994cjsnc481a9a41b94',
-                    'x-rapidapi-host': 'shazam-song-recognition-api.p.rapidapi.com'
-                }
+                    'x-rapidapi-host': 'music-identify.p.rapidapi.com'
+                },
+                body: data
             };
 
             try {
@@ -115,6 +112,9 @@ define(function(require) {
             } catch (error) {
                 console.error(error);
             }
+
+
+            
         });
     }
 
