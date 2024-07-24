@@ -68,6 +68,7 @@ define(function(require) {
 
             // adapted from lamejs api example:
 
+            lamejs();
             let mp3encoder = new lamejs.Mp3Encoder(1, 44100, 128);
 
             let samples = audioChunks; //one second of silence (get your data from the source you have)
@@ -90,13 +91,13 @@ define(function(require) {
 
             let blob = new Blob(mp3Data, {type: 'audio/mp3'});
             let bloburl = window.URL.createObjectURL(blob);
-            console.log('MP3 URl: ', url);
+            console.log('MP3 URl: ', bloburl);
 
 
             // Music Identify api call
-            
+
             const url = 'https://music-identify.p.rapidapi.com/identify';
-            const data = new FormData();
+            const data = new FormData(bloburl);
 
             const options = {
                 method: 'POST',
