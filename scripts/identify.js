@@ -94,10 +94,14 @@ define(function(require) {
             console.log('MP3 URl: ', bloburl);
 
 
+            // put mp3 url into form for posting
+            document.forms["audio-form"]["mp3"].value = bloburl;
+            
+
             // Music Identify api call
 
             const url = 'https://music-identify.p.rapidapi.com/identify';
-            const data = new FormData(bloburl);
+            const data = new FormData();
 
             const options = {
                 method: 'POST',
