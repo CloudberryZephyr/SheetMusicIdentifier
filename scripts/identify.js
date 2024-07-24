@@ -64,7 +64,7 @@ define(function(require) {
 
         recorder.connect(audioContext.destination);
 
-        getAudioData(recorder, chunks).then( function(audioChunks) {
+        getAudioData(recorder, chunks).then( async function(audioChunks) {
 
             // adapted from lamejs api example:
 
@@ -89,11 +89,31 @@ define(function(require) {
             }
 
             let blob = new Blob(mp3Data, {type: 'audio/mp3'});
-            let url = window.URL.createObjectURL(blob);
+            let bloburl = window.URL.createObjectURL(blob);
             console.log('MP3 URl: ', url);
+
+
+            // Music Identify api call
             
+            const url = 'https://music-identify.p.rapidapi.com/identify';
+            const data = new FormData();
 
+            const options = {
+                method: 'POST',
+                headers: {
+                    'x-rapidapi-key': '0bfb0321bbmsh8e25be16e31863dp15994cjsnc481a9a41b94',
+                    'x-rapidapi-host': 'music-identify.p.rapidapi.com'
+                },
+                body: data
+            };
 
+            try {
+                const response = await fetch(url, options);
+                const result = await response.text();
+                console.log(result);
+            } catch (error) {
+                console.error(error);
+            }
         });
 
     }
