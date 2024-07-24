@@ -93,6 +93,10 @@ define(function(require) {
             let bloburl = window.URL.createObjectURL(blob);
             console.log('MP3 URl: ', bloburl);
 
+            // format url for posting
+            bloburl.replace(new RegExp(":", 'g'), "%3A");
+            bloburl.replace(new RegExp("/",'g'), "%2F");
+
             // Music Identify api call
 
             const url = 'https://shazam-song-recognition-api.p.rapidapi.com/recognize/url?url='+bloburl;
