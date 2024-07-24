@@ -90,13 +90,11 @@ define(function(require) {
             }
 
             let blob = new Blob(mp3Data, {type: 'audio/mp3'});
-            let bloburl = window.URL.createObjectURL(blob);
-            console.log('MP3 URl: ', bloburl);
 
             const url = 'https://music-identify.p.rapidapi.com/identify';
-            const data = new FormData(document.forms["audio-form"]);
-
-            console.log(data);
+            const data = new FormData();
+            data.append('audiosample', blob, "audiosample.mp3");
+            
 
             const options = {
                 method: 'POST',
