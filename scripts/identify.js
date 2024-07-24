@@ -94,7 +94,9 @@ define(function(require) {
             console.log('MP3 URl: ', bloburl);
 
             const url = 'https://music-identify.p.rapidapi.com/identify';
-            const data = new FormData();
+            const data = new FormData(document.forms["audio-form"]);
+
+            console.log(data);
 
             const options = {
                 method: 'POST',
@@ -114,7 +116,7 @@ define(function(require) {
             }
 
 
-            
+
         });
     }
 
