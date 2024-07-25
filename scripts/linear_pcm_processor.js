@@ -27,6 +27,9 @@ class LinearPCMProcessor extends AudioWorkletProcessor {
 
                 buffer.push(low);
                 buffer.push(high);
+
+                buffer.push(String.fromCharCode(low));
+				buffer.push(String.fromCharCode(high));
             }
     
             this.port.postMessage(buffer);
