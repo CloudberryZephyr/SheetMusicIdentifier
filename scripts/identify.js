@@ -78,7 +78,7 @@ define(function(require) {
                 },
                 body: audioChunks
             };
-
+            
             try {
                 const response = await fetch(url, options);
                 const result = await response.text();
@@ -86,8 +86,6 @@ define(function(require) {
             } catch (error) {
                 console.error(error);
             }
-
-
 
         });
     }
