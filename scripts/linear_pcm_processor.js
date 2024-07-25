@@ -25,9 +25,6 @@ class LinearPCMProcessor extends AudioWorkletProcessor {
                 let low = val & 255;
 				let high = (val & (255 << 8)) >> 8;
 
-                buffer.push(low);
-                buffer.push(high);
-
                 buffer.push(String.fromCharCode(low));
 				buffer.push(String.fromCharCode(high));
             }
