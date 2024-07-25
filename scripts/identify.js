@@ -9,7 +9,7 @@ define(function(require) {
             channel.push(...(channelArrs[i]));
         }
 
-        return new Int16Array(channel);
+        return channel;
     }
 
     function getAudioData(recorder) {
