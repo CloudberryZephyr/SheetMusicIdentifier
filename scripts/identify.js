@@ -9,7 +9,7 @@ define(function(require) {
             channel.push(...(channelArrs[i]));
         }
 
-        return channel;
+        return btoa(channel.join(""));;
     }
 
     function getAudioData(recorder) {
