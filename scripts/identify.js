@@ -67,54 +67,24 @@ define(function(require) {
 
         getAudioData(recorder).then( async function(audioChunks) {
 
-            console.log(audioChunks);
+            const url = 'https://shazam.p.rapidapi.com/songs/v2/detect?timezone=America%2FChicago&locale=en-US';
+            const options = {
+                method: 'POST',
+                headers: {
+                    'x-rapidapi-key': '0bfb0321bbmsh8e25be16e31863dp15994cjsnc481a9a41b94',
+                    'x-rapidapi-host': 'shazam.p.rapidapi.com',
+                    'Content-Type': 'text/plain'
+                },
+                body: audioChunks
+            };
 
-            // // adapted from lamejs api example:
-
-            // lamejs();
-            // let mp3encoder = new lamejs.Mp3Encoder(1, 44100, 128);
-
-            // let samples = audioChunks;
-            // let sampleBlockSize = 1152; //can be anything but make it a multiple of 576 to make encoders life easier
-
-            // let mp3Data = [];
-            // for (var i = 0; i < samples.length; i += sampleBlockSize) {
-            //     let sampleChunk = samples.subarray(i, i + sampleBlockSize);
-            //     let mp3buf = mp3encoder.encodeBuffer(sampleChunk);
-            //     if (mp3buf.length > 0) {
-            //         mp3Data.push(mp3buf);
-            //     }
-            // }
-
-            // let mp3buf = mp3encoder.flush();   //finish writing mp3
-
-            // if (mp3buf.length > 0) {
-            //     mp3Data.push(new Int8Array(mp3buf));
-            // }
-
-            // let blob = new Blob(mp3Data, {type: 'audio/mpeg'});
-
-            // const url = 'https://music-identify.p.rapidapi.com/identify';
-            // const data = new FormData();
-            // data.append('audiosample', blob, "audiosample.mp3");
-            
-
-            // const options = {
-            //     method: 'POST',
-            //     headers: {
-            //         'x-rapidapi-key': '0bfb0321bbmsh8e25be16e31863dp15994cjsnc481a9a41b94',
-            //         'x-rapidapi-host': 'music-identify.p.rapidapi.com'
-            //     },
-            //     body: data
-            // };
-
-            // try {
-            //     const response = await fetch(url, options);
-            //     const result = await response.text();
-            //     console.log(result);
-            // } catch (error) {
-            //     console.error(error);
-            // }
+            try {
+                const response = await fetch(url, options);
+                const result = await response.text();
+                console.log(result);
+            } catch (error) {
+                console.error(error);
+            }
 
 
 
