@@ -19,7 +19,7 @@ define(function(require) {
 
                 let mergedAudio = mergeArrays(chunks);
                 resolve(mergedAudio);
-            }, 5000)
+            }, 4000)
         });
     }
 
@@ -66,6 +66,7 @@ define(function(require) {
         recorder.connect(audioContext.destination);
 
         getAudioData(recorder).then( async function(audioChunks) {
+            console.log(audioChunks);
 
             const url = 'https://shazam.p.rapidapi.com/songs/v2/detect?timezone=America%2FChicago&locale=en-US';
             const options = {
