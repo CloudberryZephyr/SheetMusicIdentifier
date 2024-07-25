@@ -53,7 +53,7 @@ define(function(require) {
 					volume.connect(recorder);
 
                     recorder.port.onmessage = (e) => {
-                        const samples = new Int16Array(e.data);
+                        const samples = new Array(...(e.data));
 						chunks.push(samples); 
 					}
 
