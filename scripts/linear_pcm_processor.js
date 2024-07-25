@@ -24,8 +24,6 @@ class LinearPCMProcessor extends AudioWorkletProcessor {
 
                 buffer.push(val);
             }
-
-            console.log(buffer);
     
             this.port.postMessage(buffer);
             return true;

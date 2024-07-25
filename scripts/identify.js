@@ -1,5 +1,6 @@
 define(function(require) {
     let lamejs = require("lame.all");
+    let chunks;
 
     function mergeArrays(channelArrs) {
         let channel = [];
@@ -11,7 +12,7 @@ define(function(require) {
         return new Int16Array(channel);
     }
 
-    function getAudioData(recorder, chunks) {
+    function getAudioData(recorder) {
         return new Promise( function(resolve, reject) {
             setTimeout( function() {
                 recorder.disconnect();
@@ -24,7 +25,7 @@ define(function(require) {
 
     async function getResponse() {
         let recorder;
-        let chunks = [];
+        chunks = [];
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {  
             await navigator.mediaDevices.getUserMedia({audio : true})
@@ -64,7 +65,7 @@ define(function(require) {
 
         recorder.connect(audioContext.destination);
 
-        getAudioData(recorder, chunks).then( async function(audioChunks) {
+        getAudioData(recorder).then( async function(audioChunks) {
 
             console.log(audioChunks);
 
