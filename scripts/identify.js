@@ -1,3 +1,5 @@
+import * as ffmpeg from "ffmpeg";
+
 define(function(require) {
     let lamejs = require("lame.all");
     lamejs();
@@ -19,55 +21,28 @@ define(function(require) {
                 recorder.stop();
 
                 let blob = new Blob(chunks, {type:'audio/wav; codecs=MS_PCM'})
-                let url = URL.createObjectURL(blob);
                 resolve(blob);
             }, 4000)
         });
     }
 
-    // from https://franzeus.medium.com/record-audio-in-js-and-upload-as-wav-or-mp3-file-to-your-backend-1a2f35dea7e8
+    // https://stackoverflow.com/questions/57365486/converting-blob-webm-to-audio-file-wav-or-mp3
 
-    function convertWavToMp3(wavBlob) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
+    async function convertWebmToMp3(webmBlob) {
+        const ffmpeg = createFFmpeg({ log: false });
+        await ffmpeg.load();
       
-          reader.onload = function () {
-            const arrayBuffer = this.result;
+        const inputName = 'input.webm';
+        const outputName = 'output.mp3';
       
-            // Create a WAV decoder
-            // @ts-expect-error - No idea
-            const wavDecoder = lamejs.WavHeader.readHeader(new DataView(arrayBuffer));
+        ffmpeg.FS('writeFile', inputName, await fetch(webmBlob).then((res) => res.arrayBuffer()));
       
-            // Get the WAV audio data as an array of samples
-            const wavSamples = new Int16Array(arrayBuffer, wavDecoder.dataOffset, wavDecoder.dataLen / 2);
+        await ffmpeg.run('-i', inputName, outputName);
       
-            // Create an MP3 encoder
-            const mp3Encoder = new lamejs.Mp3Encoder(wavDecoder.channels, wavDecoder.sampleRate, 128);
+        const outputData = ffmpeg.FS('readFile', outputName);
+        const outputBlob = new Blob([outputData.buffer], { type: 'audio/mp3' });
       
-            // Encode the WAV samples to MP3
-            const mp3Buffer = mp3Encoder.encodeBuffer(wavSamples);
-      
-            // Finalize the MP3 encoding
-            const mp3Data = mp3Encoder.flush();
-      
-            // Combine the MP3 header and data into a new ArrayBuffer
-            const mp3BufferWithHeader = new Uint8Array(mp3Buffer.length + mp3Data.length);
-            mp3BufferWithHeader.set(mp3Buffer, 0);
-            mp3BufferWithHeader.set(mp3Data, mp3Buffer.length);
-      
-            // Create a Blob from the ArrayBuffer
-            const mp3Blob = new Blob([mp3BufferWithHeader], { type: 'audio/mp3' });
-      
-            resolve(mp3Blob);
-          };
-      
-          reader.onerror = function (error) {
-            reject(error);
-          };
-      
-          // Read the input blob as an ArrayBuffer
-          reader.readAsArrayBuffer(wavBlob);
-        });
+        return outputBlob;
     }
 
     async function getResponse() {
@@ -78,7 +53,7 @@ define(function(require) {
             await navigator.mediaDevices.getUserMedia({audio : true})
                 .then( async (stream) => {
 
-                    recorder = new MediaRecorder(stream);
+                    recorder = new MediaRecorder(stream, {mimeType: "audio/wav; codecs=MS_PCM"});
 
                     recorder.ondataavailable = e => {
                         chunks.push(e.data);
@@ -118,35 +93,13 @@ define(function(require) {
             console.log("getUserMedia not supported on this browser");
         }
 
-        recorder.start();
+        recorder.start(100);
 
         getAudioData(recorder).then( async function(wavblob) {
             console.log(wavblob);
-
-            convertWavToMp3(wavblob).then( async function(encodedMP3Blob) {
-                
-
-                // api call
-                const url = 'https://music-identify.p.rapidapi.com/identify';
-                const data = new FormData();
-                data.append("clip", encodedMP3Blob);
-
-                const options = {
-                    method: 'POST',
-                    headers: {
-                        'x-rapidapi-key': '0bfb0321bbmsh8e25be16e31863dp15994cjsnc481a9a41b94',
-                        'x-rapidapi-host': 'music-identify.p.rapidapi.com'
-                    },
-                    body: data
-                };
-
-                try {
-                    const response = await fetch(url, options);
-                    const result = await response.text();
-                    console.log(result);
-                } catch (error) {
-                    console.error(error);
-                }
+            
+            convertWebmToMp3(wavblob).then( function(mp3blob) {
+                console.log(mp3blob);
             });
         });
     }
