@@ -67,6 +67,25 @@ define(function(require) {
 
         getAudioData(recorder).then( async function(base64String) {
             console.log(base64String);
+
+            const url = 'https://shazam.p.rapidapi.com/songs/v2/detect?timezone=America%2FChicago&locale=en-US';
+            const options = {
+                method: 'POST',
+                headers: {
+                    'x-rapidapi-key': '0bfb0321bbmsh8e25be16e31863dp15994cjsnc481a9a41b94',
+                    'x-rapidapi-host': 'shazam.p.rapidapi.com',
+                    'Content-Type': 'text/plain'
+                },
+                body: base64String
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const result = await response.text();
+                console.log(result);
+            } catch (error) {
+                console.error(error);
+            }
             
         });
     }
