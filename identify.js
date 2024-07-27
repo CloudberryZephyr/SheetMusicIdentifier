@@ -130,3 +130,4 @@ document.addEventListener("DOMContentLoaded", function() {
 
     searchLabel = document.getElementById("p1");
 });
+
