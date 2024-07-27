@@ -1,6 +1,4 @@
 let chunks;
-let recorder;
-let audioContext;
 let searchLabel;
 
 function mergeArrays(channelArrs) {
@@ -26,6 +24,8 @@ function getAudioData(recorder) {
 
 async function getResponse() {
     chunks = [];
+    let recorder;
+    let audioContext;
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {  
         await navigator.mediaDevices.getUserMedia({audio : true})
