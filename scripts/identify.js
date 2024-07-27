@@ -1,5 +1,8 @@
 define(function(require) {
     let chunks;
+    let recorder;
+    let audioContext;
+    let searchLabel;
 
     function mergeArrays(channelArrs) {
         let channel = [];
@@ -23,44 +26,44 @@ define(function(require) {
     }
 
     async function getResponse() {
-        let recorder;
-        let audioContext;
         chunks = [];
 
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {  
-            await navigator.mediaDevices.getUserMedia({audio : true})
-                .then( async (stream) => {
+        if (recorder != null) {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {  
+                await navigator.mediaDevices.getUserMedia({audio : true})
+                    .then( async (stream) => {
 
-                    let audioStream = stream;
+                        let audioStream = stream;
 
-					// creates the an instance of audioContext
-					const context = window.AudioContext || window.webkitAudioContext;
-					audioContext = new context({sampleRate: 44100});
+                        // creates the an instance of audioContext
+                        const context = window.AudioContext || window.webkitAudioContext;
+                        audioContext = new context({sampleRate: 44100});
 
-					// creates a gain node
-					const volume = audioContext.createGain();
+                        // creates a gain node
+                        const volume = audioContext.createGain();
 
-					// creates an audio node from the microphone incoming stream
-					const audioInput = audioContext.createMediaStreamSource(audioStream);
+                        // creates an audio node from the microphone incoming stream
+                        const audioInput = audioContext.createMediaStreamSource(audioStream);
 
-					// connect the stream to the gain node
-					audioInput.connect(volume);
+                        // connect the stream to the gain node
+                        audioInput.connect(volume);
 
-					// get processor module
-					await audioContext.audioWorklet.addModule("./scripts/linear_pcm_processor.js");
-					recorder = new AudioWorkletNode(audioContext, "linear_pcm_processor");
+                        // get processor module
+                        await audioContext.audioWorklet.addModule("./scripts/linear_pcm_processor.js");
+                        recorder = new AudioWorkletNode(audioContext, "linear_pcm_processor");
 
-					// we connect the recorder
-					volume.connect(recorder);
+                        // we connect the recorder
+                        volume.connect(recorder);
 
-                    recorder.port.onmessage = (e) => {;
-						chunks.push(...e.data); 
-					}
+                        recorder.port.onmessage = (e) => {;
+                            chunks.push(...e.data); 
+                        }
 
-                }) 
-                .catch( (err) => {console.error(`getUserMedia error: ${err}`);} );
-        } else {
-            console.log("getUserMedia not supported on this browser");
+                    }) 
+                    .catch( (err) => {console.error(`getUserMedia error: ${err}`);} );
+            } else {
+                console.log("getUserMedia not supported on this browser");
+            }
         }
 
         recorder.connect(audioContext.destination);
@@ -83,17 +86,53 @@ define(function(require) {
                 const response = await fetch(url, options);
                 const result = await response.text();
                 console.log(result);
+
+                if (result.includes("\"matches\":[]")) {
+                    searchLabel.textContent = "Audio not recognized.  Please retry."
+                    searchTerm = "";
+                } else {
+                    const artist = result.split("trackartist}\":")[1].split("\"")[1];
+                    const title = result.split("\"title\":")[1].split("\"")[1];
+                    
+                    searchTerm = title + " " + artist;
+                    searchLabel.textContent = "Search by " + title + " by " + artist;
+                }
             } catch (error) {
                 console.error(error);
             }
+
+            
             
         });
     }
+
+    function redirect() {
+        // https://musescore.com/sheetmusic?text=caribbean%20blue%20enya
+        // default https://musescore.com/
+    
+        if (searchTerm == "") {
+            window.location.href = "https://musescore.com/";
+        } else {
+            const formattedSearchTerm = "https://musescore.com/sheetmusic?text=" + searchTerm.replace(new RegExp(" ", "g"), "%20");
+            console.log(formattedSearchTerm);
+            window.location.href = formattedSearchTerm;
+        }
+    
+    }
+
+
+
 
     return function buttonSensor() {
         // detector button
         const detector = document.getElementById("mic-button");
         detector.addEventListener("click", getResponse);
+
+        // set up musecore search button
+        const searchbtn = document.getElementById("search-button");
+        searchbtn.addEventListener("click", redirect)
+
+        searchLabel = document.getElementById("p1");
     }
 
 });
