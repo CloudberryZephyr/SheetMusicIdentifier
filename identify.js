@@ -119,10 +119,7 @@ function redirect() {
 
 }
 
-
-
-
-return function buttonSensor() {
+document.addEventListener("DOMContentLoaded", function() {
     // detector button
     const detector = document.getElementById("mic-button");
     detector.addEventListener("click", getResponse);
@@ -132,4 +129,4 @@ return function buttonSensor() {
     searchbtn.addEventListener("click", redirect)
 
     searchLabel = document.getElementById("p1");
-}
+});
