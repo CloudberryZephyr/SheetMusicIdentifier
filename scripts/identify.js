@@ -28,7 +28,7 @@ define(function(require) {
     async function getResponse() {
         chunks = [];
 
-        if (recorder != null) {
+        if (recorder == null) {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {  
                 await navigator.mediaDevices.getUserMedia({audio : true})
                     .then( async (stream) => {
