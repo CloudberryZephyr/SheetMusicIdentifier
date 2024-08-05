@@ -1,4 +1,4 @@
-
+define(function(require) {
     let chunks;
     let recorder;
     let audioContext;
@@ -49,7 +49,7 @@
                         audioInput.connect(volume);
 
                         // get processor module
-                        await audioContext.audioWorklet.addModule("./scripts/linear_pcm_processor.js");
+                        await audioContext.audioWorklet.addModule("./linear_pcm_processor.js");
                         recorder = new AudioWorkletNode(audioContext, "linear_pcm_processor");
 
                         // we connect the recorder
@@ -123,7 +123,7 @@
 
 
 
-    document.addEventListener("DOMContentLoaded", function() {
+    function buttonSensor() {
         // detector button
         const detector = document.getElementById("mic-button");
         detector.addEventListener("click", getResponse);
@@ -133,4 +133,8 @@
         searchbtn.addEventListener("click", redirect)
 
         searchLabel = document.getElementById("p1");
-    });
+    }
+
+    buttonSensor();
+
+});
