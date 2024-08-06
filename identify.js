@@ -1,4 +1,4 @@
-define(function(require) {
+
     let chunks;
     let recorder;
     let audioContext;
@@ -28,7 +28,6 @@ define(function(require) {
     async function getResponse() {
         chunks = [];
 
-        if (recorder == null) {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {  
                 await navigator.mediaDevices.getUserMedia({audio : true})
                     .then( async (stream) => {
@@ -64,7 +63,6 @@ define(function(require) {
             } else {
                 console.log("getUserMedia not supported on this browser");
             }
-        }
 
         recorder.connect(audioContext.destination);
 
@@ -123,7 +121,7 @@ define(function(require) {
 
 
 
-    function buttonSensor() {
+    document.addEventListener("DOMContentLoaded", function() {
         // detector button
         const detector = document.getElementById("mic-button");
         detector.addEventListener("click", getResponse);
@@ -133,8 +131,4 @@ define(function(require) {
         searchbtn.addEventListener("click", redirect)
 
         searchLabel = document.getElementById("p1");
-    }
-
-    buttonSensor();
-
-});
+    });
