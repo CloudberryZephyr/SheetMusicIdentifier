@@ -1,5 +1,6 @@
 This repository uses browser js to record ambient audio data and then redirect the user to a search page containing sheet music corresponding to the ambient audio.  This process converts mic audio from browser default input to a Base64 string.  This string is posted to Api Dojo's Shazam Api, found at https://rapidapi.com/apidojo/api/shazam.  The api's response is then scraped for artist and title information, which is pasted into a search url at https://musescore.com.
 
+Demo this software at https://cloudberryzephyr.github.io/SheetMusicIdentifier/
 
 
 © Copyright 2024 Clara Shoemaker
